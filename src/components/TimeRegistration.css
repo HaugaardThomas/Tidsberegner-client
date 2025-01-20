@@ -1,0 +1,93 @@
+.time-registration-wrapper {
+    width: 300px;
+    margin: 2rem auto;
+    background-color: #004f60;
+    color: #fff;
+    padding: 1rem;
+    border: 2px solid #fff;
+  }
+  
+  /* Common panel styling */
+  .time-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .user-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .tasks-container, .tasks-summary {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .task-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+  }
+  
+  .task-name {
+    font-weight: bold;
+    border: 2px solid black;
+    padding: 5px 15px;
+    font-size: 25px;
+  }
+
+  .task-active {
+    background-color: #28a745;
+    color: #fff; 
+  }
+  
+  .toggle-button {
+    padding: 0.5rem 1rem;
+    background-color: #004f60;
+    border: 2px solid black;
+    font-size: 25px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
+
+  .edit-button {
+    background-color: #004f60;
+    border: none;
+    color: white;
+    font-size: 18px;
+  }
+  
+  .toggle-button:hover {
+    background-color: #004f60;
+    color: #fff;
+  }
+  
+  .date-display {
+    display: flex;
+    align-items: center;
+  }
+  .dropdown-icon {
+    margin-left: 0.3rem;
+  }
+
+  
+  .task-row.task-active {
+    background-color: green;
+    color: #fff; /* optional: make the text white or some other contrasting color */
+  }
+
+  .overview-item {
+    font-size: 1.1rem;
+    margin: 0.25rem 0;
+  }
+  
+  .overview-total {
+    margin-top: 1rem;
+    font-weight: bold;
+  }
