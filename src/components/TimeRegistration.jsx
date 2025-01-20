@@ -13,39 +13,80 @@ function TimeRegistration() {
   // Aggregated overview data
   const [overviewTasks, setOverviewTasks] = useState([]);
 
-  const [systemUsername, setSystemUsername] = useState("Loading...");
+  const [systemUsername, setSystemUsername] = useState([]);
   const [currentDate, setCurrentDate] = useState("");
 
   // For inline editing:
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editingTaskName, setEditingTaskName] = useState("");
 
+  // Ny Task
+  const [isAddingTask, setIsAddingTask] = useState(false);
+const [newTaskName, setNewTaskName] = useState("");
+
+const handleAddTask = async () => {
+  const trimmedTaskName = newTaskName.trim();
+  const userId = 1; // Replace with the actual logged-in user ID
+
+  if (!trimmedTaskName) {
+    alert("Task name cannot be empty.");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:4000/api/tasknames", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId, name: trimmedTaskName }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      // Add the new task to the state
+      setTasks((prevTasks) => [...prevTasks, data.data]);
+
+      // Reset the input field and hide the add task UI
+      setNewTaskName("");
+      setIsAddingTask(false);
+
+      // alert(`Task "${trimmedTaskName}" added successfully.`);
+    } else {
+      console.error("Failed to add task:", data.message);
+    }
+  } catch (error) {
+    console.error("Error adding task:", error);
+  }
+};
+
   // Hent i dags dato
   useEffect(() => {
     const now = new Date();
-    const formattedDate = now.toLocaleDateString("en-GB"); // Format as DD-MM-YYYY
+    const formattedDate = now.toLocaleDateString("en-GB"); 
     setCurrentDate(formattedDate);
   }, []);
-  // Hent system username
+
+
   useEffect(() => {
-    fetch("http://localhost:4000/api/getsystem/user")
+    // Ensure the user is created/exists in the database
+    fetch("http://localhost:4000/api/users/auto-create")
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setSystemUsername(data.username); // Set the username in state
+          console.log("User auto-created or fetched:", data.user.username);
+          setSystemUsername(data.user.username);
         } else {
-          setSystemUsername("Unknown User"); // Fallback if fetch fails
+          console.error("Error fetching or creating user:", data.message);
         }
       })
-      .catch((err) => {
-        console.error("Error fetching username:", err);
-        setSystemUsername("Error Fetching User");
-      });
+      .catch((err) => console.error("Error in user auto-creation:", err));
   }, []);
 
   // Fetch the "tasknames" from your server on mount
   useEffect(() => {
-    fetch("http://localhost:4000/api/tasknames")
+    const userId = 1; // Replace with the actual logged-in user ID (e.g., from context or token)
+  
+    fetch(`http://localhost:4000/api/tasknames?user_id=${userId}`)
       .then((res) => res.json())
       .then((dbTasks) => {
         console.log("Fetched tasknames:", dbTasks);
@@ -89,6 +130,8 @@ function TimeRegistration() {
    */
   const handleTaskClick = async (clickedTask) => {
     try {
+      const userId = 1; // Replace this with the actual logged-in user's ID
+  
       // Stop any currently active tasks-row
       if (activeTasksRowId) {
         await fetch("http://localhost:4000/api/tasks/stop", {
@@ -97,17 +140,18 @@ function TimeRegistration() {
           body: JSON.stringify({ taskId: activeTasksRowId }),
         });
       }
-
+  
       // Start a new DB row for this task
       const startRes = await fetch("http://localhost:4000/api/tasks/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          user_id: userId, // Pass the user ID
           tasknamesId: clickedTask.id,
           taskName: clickedTask.name,
         }),
       });
-
+  
       const startData = await startRes.json();
       if (startData.success) {
         console.log("Started a new row in 'tasks':", startData.data);
@@ -120,7 +164,6 @@ function TimeRegistration() {
       console.error("Error handling task click:", error);
     }
   };
-
   /**
    * EDITING MODE:
    *  - User clicks "Edit" → go into editing mode
@@ -139,99 +182,37 @@ function TimeRegistration() {
   };
 
 
-  /*
-  const handleSaveEdit = async (oldTask) => {
-    const newName = editingTaskName.trim();
-    if (!newName) {
-      return; // ignore empty
-    }
-
-    // If user didn't change anything, just exit edit mode
-    if (newName === oldTask.name) {
-      handleCancelEdit();
-      return;
-    }
-
-    // See if there's already a task with this newName
-    const existingTask = tasks.find(
-      (t) => t.name.toLowerCase() === newName.toLowerCase()
-    );
-    if (existingTask) {
-      alert(`Task "${newName}" already exists. We'll just use it!`);
-      // Optionally start the existing task:
-      // handleTaskClick(existingTask);
-
-      // We do not create a new record. End editing mode.
-      handleCancelEdit();
-      return;
-    }
-
-    // Otherwise, create a brand-new record in your "tasknames" table
-    try {
-      const res = await fetch("http://localhost:4000/api/tasknames", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName }),
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        // Suppose the server returns: data.data = { id: 9999, name: "whatever" }
-        const newTaskRow = data.data;
-
-        // Replace the old row in local state with the new row
-        setTasks((prevTasks) => {
-          return prevTasks.map((t) =>
-            t.id === oldTask.id ? newTaskRow : t
-          );
-        });
-
-        alert(`Created new name "${newName}" in the DB (ID ${newTaskRow.id}).`);
-        // Optionally start the new task:
-        // handleTaskClick(newTaskRow);
-      } else {
-        console.error("Failed to create new name:", data);
-      }
-    } catch (error) {
-      console.error("Error creating new name:", error);
-    }
-
-    // Done editing
-    handleCancelEdit();
-  };
-  */
+ 
 
   const handleSaveEdit = async (task) => {
     const newName = editingTaskName.trim();
+    const userId = 1; // Replace with the logged-in user ID
+  
     if (!newName) {
-      return; // Ignore empty input
+      return;
     }
   
-    // If the name wasn't changed, just exit edit mode
     if (newName === task.name) {
       handleCancelEdit();
       return;
     }
   
     try {
-      // Make a PUT request to update the task name
       const res = await fetch(`http://localhost:4000/api/tasknames/${task.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName }),
+        body: JSON.stringify({ user_id: userId, name: newName }),
       });
   
       const data = await res.json();
   
       if (data.success) {
-        // Update the task name in local state
         setTasks((prevTasks) =>
           prevTasks.map((t) =>
             t.id === task.id ? { ...t, name: newName } : t
           )
         );
-  
-        // alert(`Task name updated to "${newName}".`);
+        alert(`Task name updated to "${newName}".`);
       } else {
         console.error("Failed to update task name:", data.message);
       }
@@ -239,9 +220,9 @@ function TimeRegistration() {
       console.error("Error updating task name:", error);
     }
   
-    // Exit edit mode
     handleCancelEdit();
   };
+  
 
   /**
    * ----- TIDSBANKEN (Tidsregistrering) View -----
@@ -294,6 +275,31 @@ function TimeRegistration() {
             </div>
           );
         })}
+
+         {/* Add Task UI */}
+  {isAddingTask ? (
+    <div className="task-row adding-row">
+      <input
+        type="text"
+        value={newTaskName}
+        onChange={(e) => setNewTaskName(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") handleAddTask();
+        }}
+        placeholder="Enter new task name"
+        autoFocus
+      />
+      <button onClick={handleAddTask}>OK</button>
+      <button onClick={() => setIsAddingTask(false)}>Cancel</button>
+    </div>
+  ) : (
+    <button
+      className="add-task-button"
+      onClick={() => setIsAddingTask(true)}
+    >
+      + Add Task
+    </button>
+  )}
       </div>
 
       <button className="toggle-button" onClick={() => setShowOverview(true)}>
