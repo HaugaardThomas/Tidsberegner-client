@@ -138,11 +138,8 @@ function TimeRegistration() {
     setEditingTaskName("");
   };
 
-  /**
-   * User clicks "Save":
-   * 1. If the new name already exists → just use that existing one (no new row).
-   * 2. Otherwise, POST a new row to the DB and replace the old row in local state.
-   */
+
+  /*
   const handleSaveEdit = async (oldTask) => {
     const newName = editingTaskName.trim();
     if (!newName) {
@@ -200,6 +197,49 @@ function TimeRegistration() {
     }
 
     // Done editing
+    handleCancelEdit();
+  };
+  */
+
+  const handleSaveEdit = async (task) => {
+    const newName = editingTaskName.trim();
+    if (!newName) {
+      return; // Ignore empty input
+    }
+  
+    // If the name wasn't changed, just exit edit mode
+    if (newName === task.name) {
+      handleCancelEdit();
+      return;
+    }
+  
+    try {
+      // Make a PUT request to update the task name
+      const res = await fetch(`http://localhost:4000/api/tasknames/${task.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName }),
+      });
+  
+      const data = await res.json();
+  
+      if (data.success) {
+        // Update the task name in local state
+        setTasks((prevTasks) =>
+          prevTasks.map((t) =>
+            t.id === task.id ? { ...t, name: newName } : t
+          )
+        );
+  
+        // alert(`Task name updated to "${newName}".`);
+      } else {
+        console.error("Failed to update task name:", data.message);
+      }
+    } catch (error) {
+      console.error("Error updating task name:", error);
+    }
+  
+    // Exit edit mode
     handleCancelEdit();
   };
 
