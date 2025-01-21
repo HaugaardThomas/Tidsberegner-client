@@ -1,4 +1,3 @@
-// TimeRegistration.js
 import React, { useState, useEffect } from "react";
 import "./TimeRegistration.css";
 
@@ -7,16 +6,17 @@ function TimeRegistration() {
   const [activeTasksRowId, setActiveTasksRowId] = useState(null);
   const [activeTasknamesId, setActiveTasknamesId] = useState(null);
 
-  // Our master list of "tasknames" from the DB
+  // Liste over "tasknames" fra DB
   const [tasks, setTasks] = useState([]);
 
-  // Aggregated overview data
+  // Tasks table fra db - tid og navn
   const [overviewTasks, setOverviewTasks] = useState([]);
 
+  // System username (navnet på den person som er logget ind på system/windows)
   const [systemUsername, setSystemUsername] = useState([]);
   const [currentDate, setCurrentDate] = useState("");
 
-  // For inline editing:
+
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editingTaskName, setEditingTaskName] = useState("");
 
@@ -24,9 +24,11 @@ function TimeRegistration() {
   const [isAddingTask, setIsAddingTask] = useState(false);
 const [newTaskName, setNewTaskName] = useState("");
 
+
+// Tilføj ny task
 const handleAddTask = async () => {
   const trimmedTaskName = newTaskName.trim();
-  const userId = 1; // Replace with the actual logged-in user ID
+  const userId = 1;
 
   if (!trimmedTaskName) {
     alert("Task name cannot be empty.");
@@ -43,12 +45,11 @@ const handleAddTask = async () => {
     const data = await res.json();
 
     if (data.success) {
-      // Add the new task to the state
       setTasks((prevTasks) => [...prevTasks, data.data]);
-
-      // Reset the input field and hide the add task UI
+      
       setNewTaskName("");
       setIsAddingTask(false);
+
 
       // alert(`Task "${trimmedTaskName}" added successfully.`);
     } else {
@@ -68,7 +69,6 @@ const handleAddTask = async () => {
 
 
   useEffect(() => {
-    // Ensure the user is created/exists in the database
     fetch("http://localhost:4000/api/users/auto-create")
       .then((res) => res.json())
       .then((data) => {
@@ -82,9 +82,9 @@ const handleAddTask = async () => {
       .catch((err) => console.error("Error in user auto-creation:", err));
   }, []);
 
-  // Fetch the "tasknames" from your server on mount
+  // Hent "tasknames"
   useEffect(() => {
-    const userId = 1; // Replace with the actual logged-in user ID (e.g., from context or token)
+    const userId = 1;
   
     fetch(`http://localhost:4000/api/tasknames?user_id=${userId}`)
       .then((res) => res.json())
@@ -97,7 +97,7 @@ const handleAddTask = async () => {
       });
   }, []);
 
-  // Fetch overview whenever we switch to the "Oversigt" view
+  // Hent navn og total tid
   useEffect(() => {
     if (showOverview) {
       fetch("http://localhost:4000/api/tasks/overview")
@@ -116,23 +116,18 @@ const handleAddTask = async () => {
     }
   }, [showOverview]);
 
-  /**
-   * Utility to convert seconds → "X h Y min"
-   */
+ 
   function formatTime(totalSeconds = 0) {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     return `${hours} h ${minutes} min`;
   }
 
-  /**
-   * User clicks on a task row to start that task.
-   */
+ 
   const handleTaskClick = async (clickedTask) => {
     try {
-      const userId = 1; // Replace this with the actual logged-in user's ID
+      const userId = 1; 
   
-      // Stop any currently active tasks-row
       if (activeTasksRowId) {
         await fetch("http://localhost:4000/api/tasks/stop", {
           method: "POST",
@@ -141,12 +136,12 @@ const handleAddTask = async () => {
         });
       }
   
-      // Start a new DB row for this task
+      // Begynd at tracke tid
       const startRes = await fetch("http://localhost:4000/api/tasks/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id: userId, // Pass the user ID
+          user_id: userId,
           tasknamesId: clickedTask.id,
           taskName: clickedTask.name,
         }),
@@ -164,18 +159,13 @@ const handleAddTask = async () => {
       console.error("Error handling task click:", error);
     }
   };
-  /**
-   * EDITING MODE:
-   *  - User clicks "Edit" → go into editing mode
-   */
+
   const handleEditClick = (task) => {
     setEditingTaskId(task.id);
     setEditingTaskName(task.name);
   };
 
-  /**
-   * User clicks "Cancel" → revert to normal mode
-   */
+
   const handleCancelEdit = () => {
     setEditingTaskId(null);
     setEditingTaskName("");
@@ -186,7 +176,7 @@ const handleAddTask = async () => {
 
   const handleSaveEdit = async (task) => {
     const newName = editingTaskName.trim();
-    const userId = 1; // Replace with the logged-in user ID
+    const userId = 1;
   
     if (!newName) {
       return;
@@ -224,9 +214,7 @@ const handleAddTask = async () => {
   };
   
 
-  /**
-   * ----- TIDSBANKEN (Tidsregistrering) View -----
-   */
+
   const tidsregistreringView = (
     <div className="time-panel tidsregistrering-view">
       <h2>ABI Tidsregistrering</h2>
@@ -237,7 +225,6 @@ const handleAddTask = async () => {
 
       <div className="tasks-container">
         {tasks.map((task) => {
-          // If we're editing *this* task, show an input + Save/Cancel
           if (editingTaskId === task.id) {
             return (
               <div key={task.id} className="task-row editing-row">
@@ -253,7 +240,7 @@ const handleAddTask = async () => {
             );
           }
 
-          // Otherwise, show normal text
+       
           return (
             <div
               key={task.id}
@@ -266,7 +253,7 @@ const handleAddTask = async () => {
               <button
                 className="edit-button"
                 onClick={(e) => {
-                  e.stopPropagation(); // don't trigger row's onClick
+                  e.stopPropagation();
                   handleEditClick(task);
                 }}
               >
@@ -276,7 +263,7 @@ const handleAddTask = async () => {
           );
         })}
 
-         {/* Add Task UI */}
+         
   {isAddingTask ? (
     <div className="task-row adding-row">
       <input
@@ -308,9 +295,7 @@ const handleAddTask = async () => {
     </div>
   );
 
-  /**
-   * ----- OVERSIGT View -----
-   */
+
   const overviewView = (
     <div className="time-panel overview-view">
       <h2>ABI Tidsregistrering (Oversigt)</h2>
@@ -339,7 +324,6 @@ const handleAddTask = async () => {
     </div>
   );
 
-  // Render based on which view we are in
   return (
     <div className="time-registration-wrapper">
       {showOverview ? overviewView : tidsregistreringView}
