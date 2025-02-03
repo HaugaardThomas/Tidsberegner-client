@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 
 
 // COMPONENTS
@@ -14,18 +14,18 @@ import About from './pages/About';
 const App = () => {
 
   return (
-    // <Router>
-    //   <Navbar />
-    //   <div className="app-container">
-    //     <Routes>
-    //       <Route exact path="/" element={<Home />} />
-    //       <Route path="/about" element={<About />} />
-    //     </Routes>
-    //   </div>
-    // </Router>
-    <div className="App">
-    <TimeRegistration />
-  </div>
+    <HashRouter>
+      <Navbar />
+      <div className="app-container">
+        <Routes>
+          <Route path="/" element={<TimeRegistration />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </div>
+    </HashRouter>
+  //   <div className="App">
+  //   <TimeRegistration />
+  // </div>
   )
 }
 
