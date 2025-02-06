@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": ".",
   "main": "main.js",
   "private": true,
@@ -23,7 +23,8 @@
     "build-react": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dist": "npm run build-react && electron-builder"
+    "dist": "npm run build-react && electron-builder",
+    "dist-publish": "GH_TOKEN=$GH_TOKEN npm run dist"
   },
   "build": {
     "extends": null,
@@ -40,8 +41,7 @@
     "publish": {
       "provider": "github",
       "owner": "HaugaardThomas",
-      "repo": "Tidsberegner-client",
-      "releaseType": "release"
+      "repo": "Tidsberegner-client"
     }
   },
   "eslintConfig": {
