@@ -207,7 +207,7 @@ const handleAddTask = async () => {
         console.error("Failed to update task name:", data.message);
       }
     } catch (error) {
-      console.error("Error updating task name:", error);
+      console.error("Error updating task name: ", error);
     }
   
     handleCancelEdit();
