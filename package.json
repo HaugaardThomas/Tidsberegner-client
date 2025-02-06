@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "homepage": ".",
   "main": "main.js",
   "private": true,
@@ -11,8 +11,8 @@
     "ajv": "^8.17.1",
     "dotenv": "^16.4.7",
     "electron-updater": "^6.3.9",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^7.1.2",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
