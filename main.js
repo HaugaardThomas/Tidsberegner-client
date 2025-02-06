@@ -1,6 +1,8 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
+require('dotenv').config();
+
 
 let mainWindow;
 
@@ -8,6 +10,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    fullscreen: true,
+        autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -22,6 +26,10 @@ app.on('ready', () => {
 
   // Check for updates after the window is created.
   autoUpdater.checkForUpdatesAndNotify();
+});
+
+mainWindow.on('leave-full-screen', () => {
+  mainWindow.setFullScreen(true);
 });
 
 autoUpdater.on('update-available', () => {
