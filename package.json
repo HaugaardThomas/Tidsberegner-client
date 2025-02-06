@@ -23,7 +23,7 @@
     "build-react": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dist": "node -r dotenv/config node_modules/.bin/electron-builder"
+    "dist": "npm run build-react && electron-builder"
   },
   "build": {
     "extends": null,

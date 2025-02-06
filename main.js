@@ -10,7 +10,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    fullscreen: true,
+ 
         autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
@@ -28,9 +28,6 @@ app.on('ready', () => {
   autoUpdater.checkForUpdatesAndNotify();
 });
 
-mainWindow.on('leave-full-screen', () => {
-  mainWindow.setFullScreen(true);
-});
 
 autoUpdater.on('update-available', () => {
   console.log('Update available. Downloading...');
