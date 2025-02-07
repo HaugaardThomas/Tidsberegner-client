@@ -33,8 +33,8 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/win-unpacked/*.exe
-            dist*/*.yml
+            dist/*.exe
+            dist/*.yml
             dist/*.zip
             dist/*.dmg
         env:
