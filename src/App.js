@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import TimeRegistration from "./components/TimeRegistration";
 
 // PAGES
-import Home from './pages/Home';
+// import Home from './pages/Home';
 import About from './pages/About';
 
 const App = () => {
