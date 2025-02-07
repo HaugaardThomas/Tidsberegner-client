@@ -33,9 +33,9 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/Tidsberegner Setup 0.5.0.exe
-            dist/latest.yml
-            dist/Tidsberegner-0.5.0-win.zip
-            dist/Tidsberegner Setup 0.5.0.exe.blockmap
+            dist*/*.exe
+            dist*/*.yml
+            dist/*.zip
+            dist/*.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
