@@ -30,7 +30,6 @@
   "build": {
     "extends": null,
     "appId": "com.example.myapp",
-    "productName": "Tidsberegner",
     "directories": {
       "app": ".",
       "output": "dist"
@@ -40,9 +39,6 @@
       "package.json",
       "build"
     ],
-    "win": {
-    "target": ["nsis", "zip"]
-  },
     "publish": {
       "provider": "github",
       "owner": "HaugaardThomas",
