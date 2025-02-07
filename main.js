@@ -26,6 +26,7 @@ app.on('ready', () => {
 
   // Check for updates after the window is created.
   autoUpdater.checkForUpdatesAndNotify();
+  console.log("running auto update");
 });
 
 
