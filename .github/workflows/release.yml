@@ -26,7 +26,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: ncipollo/release-action@v1
         with:
           tag_name: v${{ github.run_number }}  # Creates a tag like v24
           name: Release v${{ github.run_number }}
