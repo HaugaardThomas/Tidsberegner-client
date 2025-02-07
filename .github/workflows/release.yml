@@ -26,14 +26,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Create GitHub Release
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}  # Creates a tag like v24
           name: Release v${{ github.run_number }}
           draft: false
           prerelease: false
           files: |
-            dist*/*.exe
+            dist/win-unpacked/*.exe
             dist*/*.yml
             dist/*.zip
             dist/*.dmg
