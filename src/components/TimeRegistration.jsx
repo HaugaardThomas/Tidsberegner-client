@@ -215,10 +215,10 @@ const handleAddTask = async () => {
   
 
 
-  
+
   const tidsregistreringView = (
     <div className="time-panel tidsregistrering-view">
-      <h2>ABI Tidsregistrering</h2>
+      <h2>ABI Tidsregistrering testing</h2>
       <div className="user-info">
         <span>{systemUsername}</span>
         <span>{currentDate}</span>
