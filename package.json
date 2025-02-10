@@ -34,6 +34,10 @@
       "app": ".",
       "output": "dist"
     },
+    "win": {
+      "target": "nsis",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
     "files": [
       "main.js",
       "package.json",
