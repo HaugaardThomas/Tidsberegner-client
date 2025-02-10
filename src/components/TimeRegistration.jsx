@@ -215,6 +215,7 @@ const handleAddTask = async () => {
   
 
 
+  
   const tidsregistreringView = (
     <div className="time-panel tidsregistrering-view">
       <h2>ABI Tidsregistrering</h2>
