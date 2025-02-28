@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import TimeRegistration from "./components/TimeRegistration";
 
 // PAGES
-// import Home from './pages/Home';
+import Home from './pages/Home';
 import About from './pages/About';
 
 const App = () => {
@@ -18,7 +18,8 @@ const App = () => {
       <Navbar />
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<TimeRegistration />} />
+          <Route path="/" element={<Home/>} />
+          <Route path="/timeregistration" element={<TimeRegistration />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </div>
